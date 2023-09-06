@@ -40,8 +40,72 @@ def profil(request):
 
     return render(request, 'rers/profil.html', {'savoirs_offerts': savoirs_offerts, 'demandes_recues': demandes_recues, 'demandes_envoyees': demandes_envoyees, 'STATUS': STATUS})
 
-def ajout_savoir(request):
-    return render(request, 'rers/ajout_savoir.html')
+def add_offer(request):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO , "Vous devez être connecté pour ajouter une offre.")
+        return redirect('login')
+    if request.method == 'POST':
+        form = OffreForm(request.POST)
+        if form.is_valid():
+            offre = form.save(commit=False)
+            offre.id_user = request.user
+            offre.save()
+            messages.add_message(request, messages.SUCCESS , "L'offre a été ajoutée avec succès.")
+            return redirect('profil')
+    else:
+        form = OffreForm()
+    return render(request, 'rers/add-offer.html', {'form': form})
+
+def add_know(request):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO , "Vous devez être connecté pour ajouter un savoir.")
+        return redirect('login')
+    if request.method == 'POST':
+        form = SavoirForm(request.POST)
+        if form.is_valid():
+            savoir = form.save(commit=False)
+            savoir.id_user = request.user
+            savoir.save()
+            messages.add_message(request, messages.SUCCESS , "Le savoir a été ajouté avec succès.")
+            return redirect('profil')
+    else:
+        form = SavoirForm()
+    return render(request, 'rers/add-know.html', {'form': form})
+
+def details_offer(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO , "Vous devez être connecté pour voir les détails d'une offre.")
+        return redirect('login')
+        
+    try:
+        offre = Offre.objects.get(id=id)
+        echanges = Echange.objects.filter(id_offre=offre)
+        utilisateurs = [echange.demande_by for echange in echanges]
+    except Offre.DoesNotExist:
+        return Http404("Offre does not exist")
+    except Echange.DoesNotExist:
+        echanges = None
+        utilisateurs = None
+
+    user_in_list = request.user in utilisateurs
+    return render(request, 'rers/details-offer.html', {'offre': offre, 'echanges': echanges, 'user_in_list': user_in_list, 'STATUS': STATUS})
+
+def add_ask(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO , "Vous devez être connecté pour ajouter une demande.")
+        return redirect('login')
+    try:
+        offre = Offre.objects.get(id=id)
+    except Offre.DoesNotExist:
+        return Http404("Offre does not exist")
+    if (offre.id_user.id == request.user.id):
+        messages.add_message(request, messages.INFO , "Vous ne pouvez pas faire une demande sur votre propre offre.")
+        return redirect('profil')
+    echange = Echange(id_offre=offre, demande_by=request.user)
+    echange.save()
+    messages.add_message(request, messages.SUCCESS , "La demande a été ajoutée avec succès.")
+    return redirect('profil')
+
 
 def register(request):
     if request.method == 'POST':
@@ -100,9 +164,10 @@ def delete_ask(request, id):
     except Echange.DoesNotExist:
         return Http404("Echange does not exist")
     if (echange.demande_by.id != request.user.id):
+        messages.add_message(request, messages.INFO , "Vous ne pouvez pas supprimer une demande qui ne vous appartient pas.")
         return redirect('profil')
-        ###TODO MESSAGE FLASH ERREUR
     echange.delete()
+    messages.add_message(request, messages.SUCCESS , f"La demande a été supprimée avec succès.")
     return redirect('profil')
 
 

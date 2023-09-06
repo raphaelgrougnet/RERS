@@ -1,0 +1,23 @@
+{% extends 'rers/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+  <div class="d-flex flex-column justify-content-center align-items-center">
+      <h2>Ajouter une offre</h2>
+      <form method="POST" class="w-50">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {% if field.field.widget.input_type == 'select' %}
+            {{ field|add_class:"form-select" }}
+          {% else %}
+            {{ field|add_class:"form-control" }}
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary mt-2">Ajouter</button>
+    </form>
+  </div>
+  
+{% endblock %}
+

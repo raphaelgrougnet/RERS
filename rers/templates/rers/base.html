@@ -32,14 +32,14 @@
                         {% if user.is_authenticated %}
                         <li class="nav-item">
                             <div class="d-flex flex-column align-items-center">
-                                <a href="/" class="text-black"><i class="bi bi-calendar-plus fs-2"></i></a>
-                                <a href="/" class="text-decoration-none text-black"><span>Ajouter offre</span></a>
+                                <a href="{% url 'add_offer' %}" class="text-black"><i class="bi bi-calendar-plus fs-2"></i></a>
+                                <a href="{% url 'add_offer' %}" class="text-decoration-none text-black"><span>Ajouter offre</span></a>
                             </div>
                         </li>
                         <li class="nav-item">
                             <div class="d-flex flex-column align-items-center">
-                                <a href="/" class="text-black"><i class="bi bi-database-fill-add fs-2"></i></a>
-                                <a href="/" class="text-decoration-none text-black"><span>Ajouter savoir</span></a>
+                                <a href="{% url 'add_know' %}" class="text-black"><i class="bi bi-database-fill-add fs-2"></i></a>
+                                <a href="{% url 'add_offer' %}" class="text-decoration-none text-black"><span>Ajouter savoir</span></a>
                             </div>
                         </li>
                         <li class="nav-item d-flex justify-content-center align-items-center">
@@ -50,8 +50,8 @@
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/profil">Aller au profil de <span>{{user.username}}</span></a></li>
-                                    <li><a class="dropdown-item" href="/accounts/logout">Se déconnecter</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'profil' %}">Aller au profil de <span>{{user.username}}</span></a></li>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Se déconnecter</a></li>
                                 </ul>
                             </div>
 

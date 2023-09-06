@@ -19,7 +19,7 @@
                             <span>{{offre.id_user.username}}</span> <img class="pfp-card"
                                 src="https://robohash.org/{{offre.id_user.id}}" alt="pfp-card"></h6>
                         <p class="card-text">{{offre.id_savoir.created_at}}</p>
-                        <a href="#" class="card-link btn btn-secondary">Details</a>
+                        <a href="{% url 'details_offer' offre.id %}" class="card-link btn btn-secondary">Details</a>
                     </div>
                 </div>
             </div>
