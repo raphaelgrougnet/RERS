@@ -76,13 +76,12 @@ def details_offer(request, id):
     if not request.user.is_authenticated:
         messages.add_message(request, messages.INFO , "Vous devez être connecté pour voir les détails d'une offre.")
         return redirect('login')
-        
     try:
         offre = Offre.objects.get(id=id)
         echanges = Echange.objects.filter(id_offre=offre)
         utilisateurs = [echange.demande_by for echange in echanges]
     except Offre.DoesNotExist:
-        return Http404("Offre does not exist")
+        raise Http404("L'offre n'existe pas.")
     except Echange.DoesNotExist:
         echanges = None
         utilisateurs = None
@@ -90,21 +89,7 @@ def details_offer(request, id):
     user_in_list = request.user in utilisateurs
     return render(request, 'rers/details-offer.html', {'offre': offre, 'echanges': echanges, 'user_in_list': user_in_list, 'STATUS': STATUS})
 
-def add_ask(request, id):
-    if not request.user.is_authenticated:
-        messages.add_message(request, messages.INFO , "Vous devez être connecté pour ajouter une demande.")
-        return redirect('login')
-    try:
-        offre = Offre.objects.get(id=id)
-    except Offre.DoesNotExist:
-        return Http404("Offre does not exist")
-    if (offre.id_user.id == request.user.id):
-        messages.add_message(request, messages.INFO , "Vous ne pouvez pas faire une demande sur votre propre offre.")
-        return redirect('profil')
-    echange = Echange(id_offre=offre, demande_by=request.user)
-    echange.save()
-    messages.add_message(request, messages.SUCCESS , "La demande a été ajoutée avec succès.")
-    return redirect('profil')
+
 
 
 def register(request):
@@ -133,7 +118,7 @@ def delete_offer(request, id):
     try:
         offre = Offre.objects.get(id=id, id_user=request.user.id)
     except Offre.DoesNotExist:
-        return Http404("Offre does not exist")
+        raise Http404("L'offre n'existe pas.")
 
     offre.delete()
     messages.add_message(request, messages.SUCCESS , f"L'offre a été supprimée avec succès.")
@@ -148,7 +133,7 @@ def modify_status_offer(request, id):
         try:
             echange = Echange.objects.get(id=id)
         except Echange.DoesNotExist:
-            return Http404("Echange does not exist")
+            raise Http404("L'Echange n'existe pas.")
         echange.status = status
         echange.save()
         messages.add_message(request, messages.SUCCESS , f"Le statut de l'échange a été modifié avec succès.")
@@ -162,7 +147,7 @@ def delete_ask(request, id):
     try:
         echange = Echange.objects.get(id=id)
     except Echange.DoesNotExist:
-        return Http404("Echange does not exist")
+        raise Http404("L'échange n'existe pas.")
     if (echange.demande_by.id != request.user.id):
         messages.add_message(request, messages.INFO , "Vous ne pouvez pas supprimer une demande qui ne vous appartient pas.")
         return redirect('profil')
@@ -190,4 +175,28 @@ def add_user(request):
         return redirect('index')
         
     
+def add_ask(request, id):
+    if not request.user.is_authenticated:
+        messages.add_message(request, messages.INFO , "Vous devez être connecté pour ajouter une demande.")
+        return redirect('login')
+    try:
+        offre = Offre.objects.get(id=id)
+    except Offre.DoesNotExist:
+        raise Http404("L'offre n'existe pas.")
+    if (offre.id_user.id == request.user.id):
+        messages.add_message(request, messages.INFO , "Vous ne pouvez pas faire une demande sur votre propre offre.")
+        return redirect('profil')
     
+    try:
+        echanges_utilisateur = Echange.objects.filter(demande_by=request.user)
+    except Echange.DoesNotExist:
+        echanges_utilisateur = None
+
+    if echanges_utilisateur.filter(id_offre=offre).exists():
+        messages.add_message(request, messages.INFO , "Vous avez déjà fait une demande pour cette offre.")
+        return redirect('profil')
+    
+    echange = Echange(id_offre=offre, demande_by=request.user)
+    echange.save()
+    messages.add_message(request, messages.SUCCESS , "La demande a été ajoutée avec succès.")
+    return redirect('profil')
