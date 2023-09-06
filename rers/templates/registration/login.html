@@ -7,7 +7,8 @@
         <h1>Se connecter</h1>
         <p>Pas encore de compte ? <a href="{% url 'register' %}">Inscrivez-vous</a></p>
     </div>
-    <form role="form" class="w-50" method="post" novalidate>{% csrf_token %}
+    <form role="form" class="w-50" method="post" novalidate>
+        {% csrf_token %}
         <div class="form-group">
             {% for field in form %}
             <div class="form-group">
