@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'rers/styles/style.css' %}">
+    <script src="{% static 'rers/scripts/validation-suppr-offre.js' %}" defer></script>
+    
+    <title>RERS</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container">
+                <a href="/" class="navbar-brand"><i class="bi bi-house-door logo" style="font-size: 2.5em;"></i></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <div class="d-flex flex-column align-items-center">
+                                <a href="/" class="text-black"><i class="bi bi-calendar-plus fs-2"></i></a>
+                                <a href="/" class="text-decoration-none text-black"><span>Ajouter offre</span></a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <div class="d-flex flex-column align-items-center">
+                                <a href="/" class="text-black"><i class="bi bi-database-fill-add fs-2"></i></a>
+                                <a href="/" class="text-decoration-none text-black"><span>Ajouter savoir</span></a>
+                            </div>
+                        </li>
+                        <li class="nav-item d-flex justify-content-center align-items-center">
+                            <div class="dropdown overflow-visible">
+                                <a class="dropdown-toggle text-decoration-none text-black" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="https://robohash.org/{{user.id}}" alt="ProfilePicture" class="pfp me-2">
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/profil">Aller au profil de <span>{{user.username}}</span></a></li>
+                                    <li><a class="dropdown-item" href="/accounts/logout">Se déconnecter</a></li>
+                                </ul>
+                            </div>
+
+
+
+                        </li>
+                        {% else %}
+                        <li class="nav-item btn btn-outline-secondary fw-bold">
+                            <a href="{% url 'login' %}" class="nav-link text-black">Se connecter <i class="bi bi-box-arrow-in-right fs-5"></i> </a>
+                            
+                            
+                        </li>
+                        
+                        
+                        {% endif %}
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+    </header>
+    <main>
+        {% if messages %}
+        {% for message in messages %}
+        <div {% if message.tags %} class="alert alert-{{ message.tags }} p-0"{% endif %}>
+            <ul class="messages m-0">
+                
+                <li {% if message.tags %} class="{{ message.tags }} p-1"{% endif %}>{{ message }}</li>
+                
+            </ul>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer class="mt-5 bg-dark-subtle">
+        <p class="m-0 text-center p-2">© 2023 Raphaël Grougnet. Tous droits réservés.</p>
+        
+    </footer>
+</body>
+
+</html>

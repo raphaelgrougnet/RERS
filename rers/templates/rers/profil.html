@@ -1,0 +1,88 @@
+{% extends "rers/base.html" %}
+
+{% block content %}
+
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="text-center">
+        <h1>Profil de {{ user.username }}</h1>
+        {% if user.is_superuser %}
+        <p>Vous êtes administrateur</p>
+        <p><a href="/api/add-user">Ajouter un utilisateur</a></p>
+        {% endif %}
+    </div>
+    <div class="w-50">
+        <h2>Savoirs que vous offrez</h2>
+        <div class="row g-2">
+            {% for savoir in savoirs_offerts %}
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ savoir.id_savoir.nom }}</h5>
+                        <button class="btn btn-danger btnSupprOffre" data-id="{{savoir.id}}"><i class="bi bi-trash"></i> Supprimer</button>
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <p>Vous n'offrez aucun savoir pour le moment</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="w-50 mt-4">
+        <h2>Gestion des demandes vous concernant</h2>
+        {% for demande in demandes_recues %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Savoir : {{ demande.id_offre.id_savoir.nom }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Demandé par : {{ demande.demande_by.username }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Status: {{ demande.get_status_display }}</h6>
+
+                <label for="status">Changer de status:</label>
+                <div class="d-flex justify-content-between align-items-end">
+                    <form method="post" class="d-flex" action="/api/modify-status-offer/{{demande.id}}">
+                        {% csrf_token %}
+                        <select name="status" id="status" class="form-select me-2">
+                            {% for valeur,status in STATUS.items %}
+                                <option value="{{ valeur }}" {% if demande.status == valeur %} selected {% endif %}>{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-primary"><i
+                                class="bi bi-check-circle"></i></button>
+
+                    </form>
+                    <small class="card-subtitle mb-2 text-muted text-center " style="white-space: nowrap;">{{ demande.date }}</small>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        {% empty %}
+        <p>Vous n'avez aucune demande pour le moment</p>
+        {% endfor %}
+    </div>
+    <div class="w-50 mt-4">
+        <h2>État des échanges demandés par vous</h2>
+        {% for echange in demandes_envoyees %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Savoir : {{ echange.id_offre.id_savoir.nom }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Offert par : {{ echange.id_offre.id_user.username }}</h6>
+                <div>
+                    <p class="btn btn-outline-secondary m-0">{{ echange.get_status_display }}</p>
+                    <a href="
+                    /api/delete-ask/{{echange.id}}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Supprimer cet échange
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% empty %}
+        <p>Vous n'avez demandé aucun échange pour le moment</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
