@@ -3,6 +3,13 @@
 {% block content %}
   <div class="d-flex flex-column justify-content-center align-items-center my-5">
       <h2 class="text-center">Ajouter un savoir dans la base des savoirs</h2>
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+      {% endif %}
       <form method="POST" class="w-50" novalidate>
       {% csrf_token %}
       {% for field in form %}
