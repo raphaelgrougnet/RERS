@@ -35,7 +35,7 @@
             <div class="card-body">
                 <h5 class="card-title">Savoir : {{ demande.id_offre.id_savoir.nom }}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">Demandé par : {{ demande.demande_by.username }}</h6>
-                <h6 class="card-subtitle mb-2 text-muted"><b>Contact :</b> {{ demande.demande_by.email }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">Contact : {{ demande.demande_by.email }}</h6>
                 <h6 class="card-subtitle mb-2 text-muted">Status: {{ demande.get_status_display }}</h6>
 
                 <label for="status">Changer de status:</label>
