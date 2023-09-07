@@ -3,7 +3,7 @@
     {% load widget_tweaks %}
     {% block content %}
       <div class="d-flex flex-column justify-content-center align-items-center my-5">
-          <h2>Détails de l'offre</h2>
+          <h2 class="text-center">Détails de l'offre</h2>
           <div class="card w-50">
             <div class="card-body">
               <h5 class="card-title">{{ offre.id_savoir.nom }}</h5>
@@ -19,16 +19,20 @@
                 {% endfor %}
               </ul>
               {% if user.is_authenticated %}
-                {% if user.id != offre.id_user.id %}
-                  {% if not user_in_list %}
-                    <a href="{% url 'add_ask' offre.id %}" class="btn btn-primary">Faire une demande</a>
+                {% if offres_utilisateur %}
+                  {% if user.id != offre.id_user.id %}
+                    {% if not user_in_list %}
+                      <a href="{% url 'add_ask' offre.id %}" class="btn btn-primary">Faire une demande</a>
+                    {% else %}
+                      <a class="btn btn-primary disabled" disabled>Déjà demandé</a>
+                    {% endif %}
                   {% else %}
-                    <a class="btn btn-primary disabled" disabled>Déjà demandé</a>
+                    <a class="btn btn-primary disabled" disabled>Vous ne pouvez pas demander votre propre offre</a>
                   {% endif %}
                 {% else %}
-                  <a class="btn btn-primary disabled" disabled>Vous ne pouvez pas demander votre propre offre</a>
+                  <a class="btn btn-primary disabled" disabled>Vous devez offrir un savoir avant d'en demander</a>
                 {% endif %}
-                
+              
               {% endif %}
               
               

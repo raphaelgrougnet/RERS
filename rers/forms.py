@@ -5,7 +5,7 @@ from .models import User, Offre, Savoir
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = UserCreationForm.Meta.fields
+        fields = ("username", "first_name",  "last_name", "email", "password1", "password2")
 
 class OffreForm(forms.ModelForm):
     class Meta:
@@ -23,3 +23,9 @@ class SavoirForm(forms.ModelForm):
             'nom': 'Nom du savoir',
             'description': 'Description du savoir'
         }
+    def clean_nom(self):
+        data = self.cleaned_data['nom']
+        print(data)
+        if Savoir.objects.filter(nom=data).exists():
+            raise forms.ValidationError("Ce savoir existe déjà.")
+        return data    

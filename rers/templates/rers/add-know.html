@@ -2,8 +2,8 @@
 {% load widget_tweaks %}
 {% block content %}
   <div class="d-flex flex-column justify-content-center align-items-center my-5">
-      <h2>Ajouter un savoir dans la base des savoirs</h2>
-      <form method="POST" class="w-50">
+      <h2 class="text-center">Ajouter un savoir dans la base des savoirs</h2>
+      <form method="POST" class="w-50" novalidate>
       {% csrf_token %}
       {% for field in form %}
         <div class="form-group">
@@ -13,6 +13,9 @@
           {% else %}
             {{ field|add_class:"form-control" }}
           {% endif %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+          {% endfor %}
         </div>
       {% endfor %}
       <button type="submit" class="btn btn-primary mt-2">Ajouter</button>

@@ -3,10 +3,12 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     pass
+    def __str__(self):
+        return self.username
 
 class Savoir(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
-    nom = models.CharField(max_length=200)
+    nom = models.CharField(max_length=150)
     description = models.TextField()
     def __str__(self):
         return self.nom

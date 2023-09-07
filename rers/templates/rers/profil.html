@@ -4,7 +4,7 @@
 
 <div class="d-flex flex-column justify-content-center align-items-center my-5">
     <div class="text-center">
-        <h1>Profil de {{ user.username }}</h1>
+        <h1 class="text-center">Profil de {{ user.username }}</h1>
         {% if user.is_superuser %}
         <p>Vous êtes administrateur</p>
         <p><a href="{% url 'add_user' %}">Ajouter un utilisateur</a></p>

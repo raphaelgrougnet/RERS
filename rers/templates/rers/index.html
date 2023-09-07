@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="d-flex flex-column align-items-center my-5 ">
+<div class="d-flex flex-column align-items-center my-5 text-center">
     <h1>RERS</h1>
     <span>La meilleur façon de partager</span>
 </div>
@@ -18,7 +18,7 @@
                         <h6 class="card-subtitle mb-2 text-body-secondary"><b>Offert par :</b>
                             <span>{{offre.id_user.username}}</span> <img class="pfp-card"
                                 src="https://robohash.org/{{offre.id_user.id}}" alt="pfp-card"></h6>
-                        <p class="card-text">{{offre.id_savoir.created_at}}</p>
+                        <p class="card-text">{{offre.created_at}}</p>
                         <a href="{% url 'details_offer' offre.id %}" class="card-link btn btn-secondary">Details</a>
                     </div>
                 </div>

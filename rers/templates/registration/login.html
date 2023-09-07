@@ -3,10 +3,18 @@
 {% block content %}
 
 <div class="d-flex flex-column justify-content-center align-items-center my-5">
-    <div>
+    <div class="text-center">
         <h1>Se connecter</h1>
         <p>Pas encore de compte ? <a href="{% url 'register' %}">Inscrivez-vous</a></p>
     </div>
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
     <form role="form" class="w-50" method="post" novalidate>
         {% csrf_token %}
         <div class="form-group">

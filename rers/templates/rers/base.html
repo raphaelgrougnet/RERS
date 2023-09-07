@@ -50,7 +50,7 @@
                                     <img src="https://robohash.org/{{user.id}}" alt="ProfilePicture" class="pfp me-2">
                                 </a>
 
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{% url 'profil' %}">Aller au profil de <span>{{user.username}}</span></a></li>
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Se déconnecter</a></li>
                                 </ul>

@@ -4,12 +4,14 @@
 {% block content %}
 
 <div class="d-flex flex-column justify-content-center align-items-center my-5">
-    <div>
+    <div class="text-center">
         <h1>S'inscrire</h1>
         <p>Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a></p>
     </div>
+    
     <form method="post" class="form" novalidate>
         {% csrf_token %}
+        
         {% for field in form %}
             <div class="form-group">
                 {{ field.label_tag }}
@@ -17,9 +19,12 @@
                 {% if field.help_text %}
                     <small class="form-text text-muted">{{ field.help_text }}</small>
                 {% endif %}
+                
                 {% for error in field.errors %}
-                    <div class="alert alert-danger">{{ error }}</div>
+                    <p class="alert alert-danger">{{ error }}</p>
                 {% endfor %}
+            
+
             </div>
         {% endfor %}
         <button type="submit" class="btn btn-primary">Inscription</button>

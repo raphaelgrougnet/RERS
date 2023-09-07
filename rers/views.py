@@ -47,6 +47,10 @@ def add_offer(request):
     if request.method == 'POST':
         form = OffreForm(request.POST)
         if form.is_valid():
+            # Vérifier si l'utilisateur offre déjà le savoir
+            if Offre.objects.filter(id_user=request.user, id_savoir=form.cleaned_data['id_savoir']).exists():
+                messages.add_message(request, messages.WARNING , "Vous offrez déjà ce savoir.")
+                return redirect('add_offer')
             offre = form.save(commit=False)
             offre.id_user = request.user
             offre.save()
@@ -80,14 +84,16 @@ def details_offer(request, id):
         offre = Offre.objects.get(id=id)
         echanges = Echange.objects.filter(id_offre=offre)
         utilisateurs = [echange.demande_by for echange in echanges]
+        offres_utilisateur = Offre.objects.filter(id_user=request.user)
     except Offre.DoesNotExist:
         raise Http404("L'offre n'existe pas.")
     except Echange.DoesNotExist:
         echanges = None
         utilisateurs = None
+        offres_utilisateur = None
 
     user_in_list = request.user in utilisateurs
-    return render(request, 'rers/details-offer.html', {'offre': offre, 'echanges': echanges, 'user_in_list': user_in_list, 'STATUS': STATUS})
+    return render(request, 'rers/details-offer.html', {'offre': offre, 'echanges': echanges, 'user_in_list': user_in_list, 'offres_utilisateur': offres_utilisateur, 'STATUS': STATUS})
 
 
 
@@ -100,8 +106,8 @@ def register(request):
             form.save()
             messages.add_message(request, messages.SUCCESS , "L'utilisateur a été ajouté avec succès, vous pouvez vous connecter.")
             return redirect('login')
-   
-    form = CustomUserCreationForm()
+    else:
+        form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
 
