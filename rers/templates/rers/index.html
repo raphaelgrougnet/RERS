@@ -11,8 +11,8 @@
         <div class="row g-2">
             {% for offre in offres %}
             {% if offre.id_savoir.status != 1 %}
-            <div class="col-4">
-                <div class="card">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title"><b>Savoir :</b> <span>{{offre.id_savoir.nom}}</span></h5>
                         <h6 class="card-subtitle mb-2 text-body-secondary"><b>Offert par :</b>

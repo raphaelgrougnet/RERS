@@ -10,4 +10,17 @@
 
 .pfp-card {
   width: 40px;
+}
+
+.error-template h1 {
+  font-size: 95px;
+}
+.error-template h2 {
+  font-size: 130px;
+}
+.error-template .error-sorry {
+  font-size: 40px;
+}
+.error-template .error-exception {
+  font-size: 25px;
 }/*# sourceMappingURL=style.css.map */
