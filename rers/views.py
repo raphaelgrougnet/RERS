@@ -166,12 +166,13 @@ def add_user(request):
     if request.user.is_authenticated and request.user.is_superuser:
         # Code to be executed if the user is an admin and is authenticated
 
-    
-        response = requests.get('https://randomapi.com/api/dd38fe552c2d0f1bbc112a619e6a8b86')
+        response = requests.get("https://randomuser.me/api/")
+        #response = requests.get('https://randomapi.com/api/dd38fe552c2d0f1bbc112a619e6a8b86')
         data = response.json()
-        utilisateur = data['results'][0]["customer"]
-        user = User.objects.create_user(username=utilisateur["username"], password=utilisateur["password"], email=utilisateur["email"], first_name=utilisateur["name"].split(" ")[0], last_name=utilisateur["name"].split(" ")[1])
-        
+        utilisateur = data['results'][0]
+        #utilisateur = data['results'][0]["customer"]
+        #user = User.objects.create_user(username=utilisateur["username"], password=utilisateur["password"], email=utilisateur["email"], first_name=utilisateur["name"].split(" ")[0], last_name=utilisateur["name"].split(" ")[1])
+        user = User.objects.create_user(username=utilisateur["login"]["username"], password="userpassword1234", email=utilisateur["email"], first_name=utilisateur["name"]["first"], last_name=utilisateur["name"]["last"])
         
         user.save()
         messages.add_message(request, messages.SUCCESS , f"L'utilisateur {user.username} a été ajouté avec succès")
@@ -192,6 +193,14 @@ def add_ask(request, id):
     if (offre.id_user.id == request.user.id):
         messages.add_message(request, messages.INFO , "Vous ne pouvez pas faire une demande sur votre propre offre.")
         return redirect('profil')
+    
+    try: 
+        offres_utilisateur = Offre.objects.filter(id_user=request.user)
+    except Offre.DoesNotExist:
+        offres_utilisateur = None
+    if not offres_utilisateur:
+        messages.add_message(request, messages.INFO , "Vous devez ajouter une offre avant de faire une demande.")
+        return redirect('details_offer', id=id)
     
     try:
         echanges_utilisateur = Echange.objects.filter(demande_by=request.user)
