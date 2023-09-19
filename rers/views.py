@@ -77,14 +77,17 @@ def add_know(request):
     return render(request, 'rers/add-know.html', {'form': form})
 
 def details_offer(request, id):
-    if not request.user.is_authenticated:
-        messages.add_message(request, messages.INFO , "Vous devez être connecté pour voir les détails d'une offre.")
-        return redirect('login')
+    # if not request.user.is_authenticated:
+    #     messages.add_message(request, messages.INFO , "Vous devez être connecté pour voir les détails d'une offre.")
+    #     return redirect('login')
     try:
         offre = Offre.objects.get(id=id)
         echanges = Echange.objects.filter(id_offre=offre)
         utilisateurs = [echange.demande_by for echange in echanges]
-        offres_utilisateur = Offre.objects.filter(id_user=request.user)
+        if request.user.is_authenticated:
+            offres_utilisateur = Offre.objects.filter(id_user=request.user)
+        else:
+            offres_utilisateur = None
     except Offre.DoesNotExist:
         raise Http404("L'offre n'existe pas.")
     except Echange.DoesNotExist:

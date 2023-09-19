@@ -34,7 +34,8 @@
                 {% else %}
                   <a class="btn btn-primary disabled" disabled>Vous devez offrir un savoir avant d'en demander</a>
                 {% endif %}
-              
+              {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary">Vous devez être connecté pour faire une demande</a>
               {% endif %}
               
               
